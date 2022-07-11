@@ -1,0 +1,12 @@
+#!/bin/bash
+
+efile="/path/to/ephemera.tsv"
+expire=$(( 60*60*24*7 ))
+tmp="/tmp/eph"
+cat $efile | {
+	while read line ; do
+		tmstmp=$(echo "$line" | cut -f1);
+		[ $(( $(date -d "now" +%s) - $(date -d "@$tmstmp" +%s) )) -lt $expire ] && echo "$line";
+	done;
+} >> $tmp
+mv $tmp $efile

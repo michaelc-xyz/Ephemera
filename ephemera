@@ -1,0 +1,27 @@
+#!/bin/bash
+
+efile=../ephemera.tsv
+ecount=24
+
+echo "Content-type: text/html"
+echo
+echo "<!DOCTYPE html>
+<html>
+<head>
+<title>Ephemera</title>
+</head>
+<body>
+<h1>Ephemera</h1>"
+echo "<p>A place for transient thoughts. Posts will disappear after 1 week.</p>"
+touch $efile
+if [ -s $efile ]; then
+	echo "<ul>"
+	tail -n "$ecount" "$efile" | tac | while read line; do
+		echo "<li>$(date +"%a %b %d %R:%S" --date="@$(echo "$line" | cut -f1)") &ndash; $(echo "$line" | cut -f2)</li>"
+	done
+	echo "</ul>"
+else
+	echo "<p>No recent posts</p>";
+fi
+echo "</body>
+</html>"

@@ -1,0 +1,7 @@
+#!/bin/bash
+efile="/path/to/ephemera.tsv"
+remote="www-data@your.website:/path/to/ephemera.tsv"
+rsync -rtvzP $remote $efile
+msg=$(dmenu -p "Ephemera: " "$@" < /dev/null )
+echo -e "$(date +%s)\t$msg" >> "$efile"
+rsync -rtvzP $efile $remote
